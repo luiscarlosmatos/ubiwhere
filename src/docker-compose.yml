@@ -1,0 +1,26 @@
+version: '3'
+services:
+  establishment-service:
+    container_name: establishment-service
+    image: ubiwhere/establishment-service-app
+    ports:
+      - "8180:8180"
+    depends_on:
+      - review-service
+  review-service:
+    container_name: review-service-container
+    image: ubiwhere/review-service-app
+    ports:
+      - "8080:8080"
+    depends_on:
+      - docker-postgres
+  docker-postgres:
+    image: postgres:10
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=ubiwhere
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - ./reviews/db/init.sql:/docker-entrypoint-initdb.d/init.sql
